@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 my-3" *ngFor="let data of movieData; index as index">
+      <div class="card" style="width: 18rem">
+        <img
+          src="{{ data.poster }}"
+          class="card-img-top"
+          style="height: 250px"
+          alt="Image"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ data.title }}</h5>
+          <p class="card-text">
+            Release Date : {{ data.releaseDate | date : "dd MMM, yyyy" }}
+          </p>
+          <p class="card-text">Rating : {{ data.rating | number : "1.1-1" }}</p>
+
+          <button
+            type="button"
+            [routerLink]="['/details', index]"
+            class="btn btn-primary"
+          >
+            Details
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger mx-3"
+            (click)="delete(index)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 my-3">
+      <div class="card card-body h-100" style="width: 18rem" (click)="add()">
+        <img
+          class="my-auto"
+          src="https://cdn-icons-png.flaticon.com/512/262/262038.png"
+          alt="Image"
+        />
+      </div>
+    </div>
+  </div>
+</div>

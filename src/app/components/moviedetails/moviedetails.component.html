@@ -1,0 +1,235 @@
+<div id="printPage" class="container my-5">
+  <div class="row" style="height: 60vh">
+    <div class="col-md-6" style="height: inherit">
+      <img src="{{ movieDetail.poster }}" style="height: inherit" alt="image" />
+    </div>
+    <div class="col-md-6">
+      <div class="row border-bottom">
+        <h2 class="mb-3">Title:- {{ movieDetail.title }}</h2>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-md-5 my-4">
+          <h5>
+            Release Date:-
+            {{ movieDetail.releaseDate | date : "dd MMM, yyyy" }}
+          </h5>
+        </div>
+        <div class="col-md-6 my-4">
+          <h5>Duration:- {{ movieDetail.duration }}</h5>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-md-6 my-4">
+          <!-- <h5>Average Rating:- {{ movieDetail.rating | number : "1.1-1" }}</h5> -->
+          <h5>Average Rating:- {{ rating | number : "1.1-1" }}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 my-4">
+          <h4>Description:-</h4>
+          <p>
+            <strong> {{ movieDetail.details }} </strong>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-info px-4 py-2"
+            (click)="printPage()"
+          >
+            Print
+          </button>
+        </div>
+        <div class="col d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-info px-4 py-2"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Review
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+
+    <div class="row my-2">
+      <div class="row">
+        <div class="col-md-6 border-bottom">
+          <h2>Reviews</h2>
+        </div>
+      </div>
+      <div
+        class="col-12"
+        *ngFor="let item of movieDetail.reviews; index as index"
+      >
+        <div class="row">
+          <div class="col-md-6 my-3 border-bottom">
+            <h4 class="border-bottom pb-2">{{ item.reviewerName }}</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="py-2">
+                  <strong> Review:- </strong>
+                  {{ item.reviewContent }}
+                </p>
+              </div>
+              <div class="col-md-3">
+                <p class="py-2">
+                  <strong> Rating:- {{ item.rating }} </strong>
+                </p>
+              </div>
+              <div class="col-md-3">
+                <div class="py-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger p-0 px-2"
+                    (click)="delete(index)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Review</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="popUpReset()"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Form -->
+
+      <div class="modal-body">
+        <form [formGroup]="review" (ngSubmit)="submit()">
+          <div class="row my-3">
+            <div class="d-flex justify-content-around align-item-center">
+              <label for="" class="form-label px-3 w-25">Name:-</label>
+              <input
+                type="text"
+                name="reviewerName"
+                class="form-control w-75"
+                formControlName="reviewerName"
+                placeholder="Name"
+                [ngClass]="{
+                  error:
+                    catchErrors('reviewerName')?.errors &&
+                    catchErrors('reviewerName')?.touched
+                }"
+              />
+              <div
+                *ngIf="
+                  catchErrors('reviewerName')?.errors &&
+                  catchErrors('reviewerName')?.touched
+                "
+              >
+                <small
+                  class="text-danger"
+                  *ngIf="catchErrors('reviewerName')?.errors?.['required']"
+                  >Name is Required....</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row my-3">
+            <div class="d-flex justify-content-between">
+              <label for="" class="form-label px-3 w-25">Review:-</label>
+              <input
+                class="form-control w-75"
+                name="reviewContent"
+                placeholder="Reviw Content"
+                formControlName="reviewContent"
+                [ngClass]="{
+                  error:
+                    catchErrors('reviewContent')?.errors &&
+                    catchErrors('reviewContent')?.touched
+                }"
+              />
+              <div
+                *ngIf="
+                  catchErrors('reviewContent')?.errors &&
+                  catchErrors('reviewContent')?.touched
+                "
+              >
+                <small
+                  class="text-danger"
+                  *ngIf="catchErrors('reviewContent')?.errors?.['required']"
+                  >Content is Required....</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row my-3">
+            <div class="d-flex justify-content-around align-item-center">
+              <label for="" class="form-label px-3 w-25">Rating:-</label>
+              <input
+                type="number"
+                name="rating"
+                class="form-control w-75"
+                formControlName="rating"
+                max="5"
+                min="0"
+                placeholder="Rating out of 5.0"
+                [ngClass]="{
+                  error:
+                    catchErrors('rating')?.errors &&
+                    catchErrors('rating')?.touched
+                }"
+              />
+              <div
+                *ngIf="
+                  catchErrors('rating')?.errors &&
+                  catchErrors('rating')?.touched
+                "
+              >
+                <small
+                  class="text-danger"
+                  *ngIf="catchErrors('rating')?.errors?.['required']"
+                  >Rating is Required....</small
+                >
+                <small class="text-danger" *ngIf="catchErrors('rating')?.errors"
+                  >Invalid Rating....</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col d-flex justify-content-end border-top pt-3">
+              <button
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+                [disabled]="!review.valid"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

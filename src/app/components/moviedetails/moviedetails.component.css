@@ -1,0 +1,14 @@
+.error{
+    border: 1px solid red;
+}
+
+@media print{
+    button{
+        display: none;
+    }
+    @page{
+          size: auto;
+          margin: 0mm;
+      }
+   
+}
